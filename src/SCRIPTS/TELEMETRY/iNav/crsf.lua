@@ -3,6 +3,8 @@ local config, data, getTelemetryId = ...
 data.crsf = true
 data.rfmd_id = getTelemetryId("RFMD")
 data.rssi_id = getTelemetryId("1RSS")
+data.rssi2_id = getTelemetryId("2RSS")
+data.trss_id = getTelemetryId("TRSS")
 data.sat_id = getTelemetryId("Sats")
 data.fuel_id = getTelemetryId("Capa")
 data.batt_id = getTelemetryId("RxBt") > -1 and getTelemetryId("RxBt") or getTelemetryId("BtRx")
@@ -26,6 +28,9 @@ local function crsf(data)
 		return 0
 	end
 	if data.rssi == 99 then data.rssi = 100 end
+	data.rssi1 = getValue(data.rssi_id)
+	data.rssi2 = getValue(data.rssi2_id)
+	data.trss = getValue(data.trss_id)
 	data.tpwr = getValue(data.tpwr_id)
 	data.rfmd = getValue(data.rfmd_id)
 	data.pitch = math.deg(getValue(data.pitch_id)) * 10

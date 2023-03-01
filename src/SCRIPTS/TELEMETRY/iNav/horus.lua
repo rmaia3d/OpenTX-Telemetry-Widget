@@ -515,7 +515,12 @@ local function view(data, config, modes, dir, units, labels, gpsDegMin, hdopGrap
 		data.rc = rgb(red, green, 60)
 		data.rl = val
 	end
-	lcd.drawGauge(0, TOP + 110, X1 - 3, 15, min(val, 99), 100, data.set_flags(0, data.rc))
+	-- lcd.drawGauge(0, TOP + 110, X1 - 3, 15, min(val, 99), 100, data.set_flags(0, data.rc))
+	local rss1 = getValue(data.rssi_id)
+	local rss2 = getValue(data.rssi2_id)
+	local trss = getValue(data.trss_id)
+	text(X1 - 10, TOP + 110, rss1 .. "dB/" .. rss2 .. "dB/" .. trss .. "dB", data.set_flags(SMLSIZE + RIGHT, tmp))
+
 
 	-- Box 2 (altitude, distance, current)
 	tmp = data.showMax and data.altitudeMax or data.altitude
