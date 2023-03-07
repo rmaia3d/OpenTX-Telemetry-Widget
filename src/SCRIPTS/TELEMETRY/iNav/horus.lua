@@ -507,15 +507,22 @@ local function view(data, config, modes, dir, units, labels, gpsDegMin, hdopGrap
 
 	tmp = (not data.telem or data.rssi < data.rssiLow) and RED or data.TextColor
 	val = data.showMax and data.rssiMin or data.rssiLast
-	text(X1 - 3, TOP + 84, val .. (data.crsf and "%" or "dB"), data.set_flags(MIDSIZE + RIGHT,tmp))
-	text(0, TOP + 93, data.crsf and "LQ" or "RSSI", data.set_flags(SMLSIZE, data.TextColor))
+	text(X1 - 3, TOP + 85, val .. (data.crsf and "%" or "dB"), data.set_flags(SMLSIZE + RIGHT, tmp))
+	text(0, TOP + 85, data.crsf and "1R/2R/TR LQ" or "RSSI", data.set_flags(SMLSIZE, data.TextColor))
 	if data.rl ~= val then
 		local red = val >= data.rssiLow and max(floor((100 - val) / (100 - data.rssiLow) * 255), 0) or 255
 		local green = val < data.rssiLow and max(floor((val - data.rssiCrit) / (data.rssiLow - data.rssiCrit) * 255), 0) or 255
 		data.rc = rgb(red, green, 60)
 		data.rl = val
 	end
-	lcd.drawGauge(0, TOP + 110, X1 - 3, 15, min(val, 99), 100, data.set_flags(0, data.rc))
+	if data.crsf then
+		local rss1 = data.showMax and data.min_1rss or getValue(data.rssi_id)
+		local rss2 = data.showMax and data.min_2rss or getValue(data.rssi2_id)
+		local trss = data.showMax and data.min_trss or getValue(data.trss_id)
+		text(X1 - 3, TOP + 102, rss1 .. "/" .. rss2 .. "/" .. trss, data.set_flags(MIDSIZE + RIGHT, tmp))
+	else
+		lcd.drawGauge(0, TOP + 110, X1 - 3, 15, min(val, 99), 100, data.set_flags(0, data.rc))
+	end
 
 	-- Box 2 (altitude, distance, current)
 	tmp = data.showMax and data.altitudeMax or data.altitude
